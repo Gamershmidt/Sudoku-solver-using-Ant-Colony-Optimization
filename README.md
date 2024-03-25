@@ -5,6 +5,7 @@
 - [Project Idea](#project-idea)
 - [Method/Technique](#methodtechnique)
   - [Pheromone Management](#pheromone-management)
+  - [Brief Algorithm Description](#brief-algorithm-description)
 - [Dataset Explanation](#dataset-explanation)
 
 ## Project Idea
@@ -26,6 +27,12 @@ A 2D array that represents the amount of pheromone associated with each possible
   At each step of ant exploration, local pheromone levels associated with the chosen value in the current cell are updated. This helps the ants choose various paths.
 
 While the puzzle is not solved, during each iteration, ants sequentially traverse the Sudoku board, making one move per iteration. If a cell being explored is not fixed, the ant selects a value from its set of possible values, fixes it in the cell, and updates local pheromone levels. This reinforcement of successful choices aids subsequent ants in selecting promising values.
+
+### Brief Algorithm Description
+
+While puzzle is not solved, during each iteration, antssequentially traverse the Sudoku board, making one move per iteration. If a cell being explored is not fixed, the ant selects a value from its set of possible values, fixes it in the cell, and updates local pheromone levels. This reinforcement of successful choices aids subsequent ants in selecting promising values.
+
+If a cell ends up with an empty set of possible values during exploration, it’s marked as incorrect. Each ant tracks the number of cells it has fixed, subtracting any incorrect cells encountered.
 
 ## Dataset Explanation
 
