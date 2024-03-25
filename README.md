@@ -29,4 +29,4 @@ While the puzzle is not solved, during each iteration, ants sequentially travers
 
 ## Dataset Explanation
 
-Our dataset will comprise various Sudoku puzzles that our program will have to solve. The link below leads to the code used for generating Sudoku puzzles. It produces a single string of numbers, where zeros represent empty spaces on the Sudoku grid with size \(9 \times 9\). We will use this code to create 100 examples for our dataset ([accessible link](link_here)).
+Our dataset will comprise various Sudoku puzzles that our program will have to solve. The link below leads to the code used for generating Sudoku puzzles. It produces a single string of numbers, where zeros represent empty spaces on the Sudoku grid with size \(9 \times 9\). We will use this code to create 100 examples for our dataset ([accessible link]([link_here](https://www.kaggle.com/datasets/bryanpark/sudoku)https://www.kaggle.com/datasets/bryanpark/sudoku)).
