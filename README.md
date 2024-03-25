@@ -18,7 +18,7 @@ The Ant Colony Optimization method was chosen to implement Sudoku problems.
 ### Pheromone Management
 
 **Pheromone matrix:** 
-A 2D array that represents the amount of pheromone associated with each possible value for each cell in the Sudoku grid. Initially, all cells have equal pheromone levels, typically set to \( \frac{1}{81} \), indicating an equal likelihood for any value to be chosen for any cell.
+A 2D array that represents the amount of pheromone associated with each possible value for each cell in the Sudoku grid. Initially, all cells have equal pheromone levels, typically set to  $\frac{1}{81}$, indicating an equal likelihood for any value to be chosen for any cell.
 
 - **Global:**
   Updated periodically based on successful solutions to reinforce paths that lead to successful solutions.
