@@ -36,4 +36,4 @@ If a cell ends up with an empty set of possible values during exploration, it’
 
 ## Dataset Explanation
 
-Our dataset will comprise various Sudoku puzzles that our program will have to solve. The link below leads to the code used for generating Sudoku puzzles. It produces a single string of numbers, where zeros represent empty spaces on the Sudoku grid with size \(9 \times 9\). We will use this code to create 100 examples for our dataset ([accessible link](https://www.kaggle.com/datasets/bryanpark/sudoku)).
+Our dataset will comprise various Sudoku puzzles that our program will have to solve. The link below leads to the code used for generating Sudoku puzzles. It produces a single string of numbers, where zeros represent empty spaces on the Sudoku grid with size (9 $\times$ 9). We will use this code to create 100 examples for our dataset ([accessible link](https://www.kaggle.com/datasets/bryanpark/sudoku)).
