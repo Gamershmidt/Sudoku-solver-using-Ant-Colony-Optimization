@@ -4,8 +4,9 @@ class Unit:
     value - number in cell
     set_values - set of possible numbers to put in cell
     """
-    def __init__(self, value=0):
+    def __init__(self, dim, value=0):
         self.fixed = False
+        self.dimension = dim
         self.value = value
         self.set_values = []
         # if cell is not empty -> fix it
@@ -13,11 +14,14 @@ class Unit:
             self.set_values.append(value)
             self.fixed = True
         else:
-            self.set_values = [i for i in range(1, 10)]
+            self.set_values = [i for i in range(1, self.dimension + 1)]
     # if there are only one possible value -> value in cell is vixed
     def check_fixed(self):
         self.fixed = len(self.set_values)
         return len(self.set_values) == 1
+
+    def set(self, value):
+        self.value = value
 
     def drop_possible(self, value):
         self.set_values.remove(value)
