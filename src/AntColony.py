@@ -110,7 +110,8 @@ class AntColony:
             # global pheromone update
             for i in range(self.grid_size):
                 for j in range(self.grid_size):
-                    cur_cell = self.best_ant.grid.sudoku[i][j]
+                    #cur_cell = self.best_ant.grid.sudoku[i][j]
+                    cur_cell = self.solved_grid.sudoku[i][j]
                     if not cur_cell.is_cell_incorrect:
                         self.pheromone_matrix[i][j][cur_cell.value - 1] = (
                                 (1 - self.global_evaporation_rate) * self.pheromone_matrix[i][j][cur_cell.value - 1] +
@@ -118,10 +119,10 @@ class AntColony:
 
             self.delta_tau_best = self.delta_tau_best * self.delta_tau_best_evaporation
 
-num_of_ants = 15
+num_of_ants = 20
 dim = 3
 local_evaporation_rate = 0.1
-global_evaporation_rate = 0.9
+global_evaporation_rate = 0.85
 ant_colony = AntColony(num_of_ants, local_evaporation_rate, global_evaporation_rate, initial_grid, dim)
 ant_colony.current_grid.print_grid()
 print(ant_colony.current_grid.sudoku[0][0].set_values)

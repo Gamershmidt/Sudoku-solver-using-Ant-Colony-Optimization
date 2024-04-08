@@ -1,3 +1,5 @@
+import random
+
 import numpy as np
 from SudokuGrid import Grid
 
@@ -27,12 +29,22 @@ class Ant:
         elif len(cur_cell_possible_values) == 0:
             self.num_of_incorrect += 1
         else:
-            # choose value from current cell’s value set;
-            pheromones_sum = 0
-            for val in cur_cell_possible_values:
-                pheromones_sum += self.pheromone_matrix[self.row][self.column][val-1]
-            probabilities = [self.pheromone_matrix[self.row][self.column][cur_cell_possible_values[i] - 1] / pheromones_sum for i in range(len(cur_cell_possible_values))]
-            chosen_value = np.random.choice(cur_cell_possible_values, p=probabilities)
+            if (random.random() > 0.9):
+                # choose value with max pheromone
+                max_pheromone = 0
+                max_pheromone_idx = -1
+                for i in range(len(cur_cell_possible_values)):
+                    if self.pheromone_matrix[self.row][self.column][cur_cell_possible_values[i] - 1] > max_pheromone:
+                        max_pheromone = self.pheromone_matrix[self.row][self.column][cur_cell_possible_values[i] - 1]
+                        max_pheromone_idx = i
+                chosen_value = cur_cell_possible_values[max_pheromone_idx]
+            else:
+                # choose value from current cell’s value set;
+                pheromones_sum = 0
+                for val in cur_cell_possible_values:
+                    pheromones_sum += self.pheromone_matrix[self.row][self.column][val-1]
+                probabilities = [self.pheromone_matrix[self.row][self.column][cur_cell_possible_values[i] - 1] / pheromones_sum for i in range(len(cur_cell_possible_values))]
+                chosen_value = np.random.choice(cur_cell_possible_values, p=probabilities)
 
             # fix value
             self.grid.sudoku[self.row][self.column].fix_cell(chosen_value)
