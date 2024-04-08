@@ -30,18 +30,18 @@ class Ant:
         else:
             # choose value from current cell’s value set;
             # 3 4 5
-            possible_values = self.grid.get_possible_values(self.row, self.column)
+
             sum = 0
             #print('possible values', possible_values)
-            for val in possible_values:
+            for val in cur_cell_possible_values:
                 sum += self.pheromone_matrix[self.row][self.column][val-1]
                 #print('pheromone matrix ', self.pheromone_matrix[self.row][self.column][val-1])
             #print(sum)
-            probabilities = [self.pheromone_matrix[self.row][self.column][possible_values[i] - 1] / sum for i in range(len(possible_values))]
+            probabilities = [self.pheromone_matrix[self.row][self.column][cur_cell_possible_values[i] - 1] / sum for i in range(len(cur_cell_possible_values))]
             #print(probabilities, np.sum(probabilities))
 
             # choose value from possible
-            chosen_value = np.random.choice(possible_values, p=probabilities)
+            chosen_value = np.random.choice(cur_cell_possible_values, p=probabilities)
 
             # print('Before ', self.grid.sudoku[self.row][self.column].set_value)
             self.grid.sudoku[self.row][self.column].drop_possible(chosen_value)
@@ -53,7 +53,7 @@ class Ant:
             self.num_of_fixed += 1
             # propagate constraints;
             # self.grid.update_cell_values(self.row, self.column)
-            self.grid.propagate_new_constraint(self.row, self.column)
+            self.grid.update_cell_values(self.row, self.column)
             # update local pheromone;
             self.pheromone_matrix[self.row][self.column][chosen_value-1] = (
                     (1 - self.local_evaporation_rate) * self.pheromone_matrix[self.row][self.column][

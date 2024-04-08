@@ -22,13 +22,11 @@ class Grid:
         for i in range(self.size):
             if i != pos_i:
                 self.sudoku[i][pos_j].drop_possible(self.sudoku[pos_i][pos_j].value)
-                if self.sudoku[i][pos_j].check_fixed():
-                    self.update_cell_values(i, pos_j)
+
         for j in range(self.size):
             if j != pos_j:
                 self.sudoku[pos_i][j].drop_possible(self.sudoku[pos_i][pos_j].value)
-                if self.sudoku[pos_i][j].check_fixed():
-                    self.update_cell_values(pos_i, j)
+
         # add checker for small squares
     def propagate_new_constraint(self, pos_i, pos_j):
         for i in range(self.size):
