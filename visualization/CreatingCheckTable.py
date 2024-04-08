@@ -1,22 +1,22 @@
-import checking.CheckingConditions as Check
+import CheckingConditions as Check
 
 
 def create_check_table(grid):
     check_table = [[0] * 9 for _ in range(9)]
 
-    # Horizontal checking
+    # Horizontal checkingGrid
     for i in range(9):
         if Check.check_horizontal(grid, i):
             for j in range(9):
                 check_table[i][j] += 1
 
-    # Vertical checking
+    # Vertical checkingGrid
     for j in range(9):
         if Check.check_horizontal(grid, j):
             for i in range(9):
                 check_table[i][j] += 1
 
-    # Square checking
+    # Square checkingGrid
     for i in range(3):
         for j in range(3):
             if Check.check_square(grid, i, j):
