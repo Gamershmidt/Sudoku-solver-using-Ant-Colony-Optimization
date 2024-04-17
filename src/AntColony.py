@@ -16,18 +16,28 @@ from Ant import Ant
 #     [0, 5, 1, 0, 6, 3, 0, 9, 8],
 # ]
 
-initial_grid = [[5,2,3,6,0,8,0,0,4],
-[4,6,0,9,0,0,0,2,0],
-[9,0,8,0,0,0,0,0,0],
-[8,1,0,0,0,4,0,0,9],
-[0,0,0,0,0,5,4,0,7],
-[6,0,0,8,3,0,2,0,5],
-[0,0,0,0,7,3,0,4,6],
-[0,3,0,0,0,0,9,0,0],
-[2,0,0,5,9,6,1,0,3]
+# initial_grid = [[5,2,3,6,0,8,0,0,4],
+# [4,6,0,9,0,0,0,2,0],
+# [9,0,8,0,0,0,0,0,0],
+# [8,1,0,0,0,4,0,0,9],
+# [0,0,0,0,0,5,4,0,7],
+# [6,0,0,8,3,0,2,0,5],
+# [0,0,0,0,7,3,0,4,6],
+# [0,3,0,0,0,0,9,0,0],
+# [2,0,0,5,9,6,1,0,3]
+# ]
+
+initial_grid = [
+[0,0,1,5,2,0,0,4,0],
+[6,0,0,1,0,0,0,0,9],
+[0,4,0,8,0,0,0,7,0],
+[0,9,0,0,0,0,0,0,1],
+[0,0,8,0,0,0,4,0,0],
+[4,0,0,0,0,0,0,9,0],
+[0,7,0,0,0,9,0,8,0],
+[5,0,0,0,0,8,0,0,4],
+[0,1,0,0,5,2,6,0,0]
 ]
-
-
 
 class AntColony:
     def __init__(self, num_of_ants, local_evaporation_rate, global_evaporation_rate,
@@ -35,7 +45,7 @@ class AntColony:
         self.num_of_ants = num_of_ants
         self.local_evaporation_rate = local_evaporation_rate
         self.global_evaporation_rate = global_evaporation_rate
-        self.delta_tau_best_evaporation = 0.9995
+        self.delta_tau_best_evaporation = 0.995
 
         self.initial_grid = initial_grid
         self.current_grid = Grid(dimension)
@@ -61,7 +71,8 @@ class AntColony:
                     fixed_num += 1
                     # self.current_grid.propagate_new_constraint(i, j)
                     # propagate constraints
-                    self.current_grid.update_cell_values(i, j)
+                    self.current_grid.propagate(i, j, self.ants[0])
+                    # self.current_grid.update_cell_values(i, j)
         self.solved_grid = copy.deepcopy(self.current_grid)
         print("num of fixed ")
 
@@ -121,8 +132,8 @@ class AntColony:
 
 num_of_ants = 20
 dim = 3
-local_evaporation_rate = 0.2
-global_evaporation_rate = 0.8
+local_evaporation_rate = 0.1
+global_evaporation_rate = 0.9
 ant_colony = AntColony(num_of_ants, local_evaporation_rate, global_evaporation_rate, initial_grid, dim)
 ant_colony.current_grid.print_grid()
 print(ant_colony.current_grid.sudoku[0][0].set_values)
