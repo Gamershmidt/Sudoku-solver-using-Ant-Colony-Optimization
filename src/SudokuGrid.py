@@ -76,7 +76,7 @@ class Grid:
                     continue
                 next_cell.drop_possible(cur_cell.value)
                 if next_cell.can_be_fixed():
-                    ant.num_of_fixed += 1
+                    #ant.num_of_fixed += 1
                     next_cell.fix_cell(next_cell.get_possible_values()[0])
                     cur_cell.drop_possible(next_cell.value)
                     self.propagate(i, pos_j, ant)
@@ -144,7 +144,7 @@ class Grid:
                     continue
                 next_cell.drop_possible(cur_cell.value)
                 if next_cell.can_be_fixed():
-                    ant.num_of_fixed += 1
+                    #ant.num_of_fixed += 1
                     next_cell.fix_cell(next_cell.get_possible_values()[0])
                     cur_cell.drop_possible(next_cell.value)
                     self.propagate(pos_i, j, ant)
@@ -168,7 +168,7 @@ class Grid:
                         continue
                     next_cell.drop_possible(cur_cell.value)
                     if next_cell.can_be_fixed():
-                        ant.num_of_fixed += 1
+                       #ant.num_of_fixed += 1
                         next_cell.fix_cell(next_cell.get_possible_values()[0])
                         cur_cell.drop_possible(next_cell.value)
                         self.propagate(i, j, ant)
