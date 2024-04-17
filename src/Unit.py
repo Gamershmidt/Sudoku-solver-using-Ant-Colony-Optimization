@@ -18,6 +18,8 @@ class Unit:
     # if there are only one possible value -> value in cell is vixed
     def is_cell_fixed(self):
         return self.fixed
+    def can_be_fixed(self):
+        return len(self.set_values) == 1 and not self.fixed
     def is_cell_incorrect(self):
         return self.impossible()
 
@@ -38,6 +40,9 @@ class Unit:
     def drop_possible(self, value):
         if value in self.set_values:
             self.set_values.remove(value)
+        # if len(self.set_values) == 1:
+        #     self.fix_cell(self.set_values[0])
+
     # no values can be put in cell
     def impossible(self):
         return len(self.set_values) == 0
