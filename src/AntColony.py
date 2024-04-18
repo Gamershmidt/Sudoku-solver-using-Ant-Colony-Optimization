@@ -4,6 +4,7 @@ import random
 from SudokuGrid import Grid
 from Ant import Ant
 
+
 # initial_grid = [
 #     [0, 6, 0, 0, 0, 0, 5, 0, 2],
 #     [0, 3, 0, 0, 7, 0, 0, 0, 0],
@@ -39,11 +40,11 @@ from Ant import Ant
 # [0,1,0,0,5,2,6,0,0]
 # ]
 
-def load_dataset():
+def load_dataset(filename):
     import numpy as np
     quizzes = np.zeros((1000000, 81), np.int32)
     solutions = np.zeros((1000000, 81), np.int32)
-    for i, line in enumerate(open('sudoku_big.csv', 'r').read().splitlines()[1:]):
+    for i, line in enumerate(open(filename, 'r').read().splitlines()[1:]):
         quiz, solution = line.split(",")
         for j, q_s in enumerate(zip(quiz, solution)):
             q, s = q_s
@@ -51,25 +52,85 @@ def load_dataset():
             solutions[i, j] = s
     return quizzes, solutions
 
+def load_one_task(filename):
+    file = open(filename, 'r')
+    task_line = file.readline()
+    return task_line
+
 
 def create_matrix(input_string):
     rows = []
     for i in range(9):
-        row = [int(input_string[j]) for j in range(i*9, (i+1)*9)]
+        row = [int(input_string[j]) for j in range(i * 9, (i + 1) * 9)]
         rows.append(row)
     return rows
+
+
 def create_array(matrix: Grid):
     array = []
     for row in matrix.sudoku:
         for val in row:
             array.append(val.value)
     return array
+
+
 def create_line(matrix: Grid):
     line = ""
     for row in matrix.sudoku:
         for val in row:
             line += str(val.value)
     return line
+
+
+def solve_one_puzzle(filename):
+    input_puzzle_line = load_one_task(filename)
+    initial_grid = create_matrix(input_puzzle_line)
+    # print task
+    print('Task')
+    for row in initial_grid:
+        for val in row:
+            print(val, end=' ')
+        print()
+
+    ant_colony = AntColony(num_of_ants, local_evaporation_rate, global_evaporation_rate, initial_grid, dim)
+    found = ant_colony.solve_sudoku()
+    if found is not None:
+        # solution = create_array(found)
+        print('Solved')
+        found.print_grid()
+    else:
+        print('No solution found')
+
+
+def solve_all_puzzles(num_of_puzzles, filename):
+    quizzes, solutions = load_dataset(filename)
+    # for i in range(10000):
+    #     input_line = "".join([str(x) for x in quizzes[i]])
+    #     solve_one_puzzle(input_line)
+    with open("output.txt", "w") as file:
+        for i in range(num_of_puzzles):
+            file.write(f"Test {i}\n")
+            input_line = "".join([str(x) for x in quizzes[i]])
+            solution_line = "".join([str(x) for x in solutions[i]])
+            file.write(f"Input task: {input_line}, solution: {solution_line}\n")
+            initial_grid = create_matrix(input_line)
+            ant_colony = AntColony(num_of_ants, local_evaporation_rate, global_evaporation_rate, initial_grid, dim)
+            found = ant_colony.solve_sudoku()
+            if found is not None:
+                solution = create_array(found)
+                solved = True
+                for j in range(81):
+                    if solution[j] != solutions[i][j]:
+                        file.write(f"Test {i} failed\n")
+                        file.write(f"Incorrect solution: {create_line(found)}\n")
+                        solved = False
+                        break
+                if solved:
+                    file.write(f"Test {i} passed\n")
+                    file.write(f"Solution: {create_line(found)}\n")
+            else:
+                file.write(f"No solution found on test{i}\n")
+
 
 class AntColony:
     def __init__(self, num_of_ants, local_evaporation_rate, global_evaporation_rate,
@@ -106,7 +167,7 @@ class AntColony:
                     self.current_grid.propagate(i, j, self.ants[0])
                     # self.current_grid.update_cell_values(i, j)
         self.solved_grid = copy.deepcopy(self.current_grid)
-        print("num of fixed ")
+        #print("num of fixed ")
 
     def solve_sudoku(self):
         sudoku_solved = False
@@ -120,10 +181,10 @@ class AntColony:
                              local_evaporation_rate=self.local_evaporation_rate
                              ) for i in range(self.num_of_ants)]
 
-            self.solved_grid.print_grid()
+            #self.solved_grid.print_grid()
             num_of_iterations += 1
 
-            print(num_of_iterations, self.delta_tau_best)
+            #print(num_of_iterations, self.delta_tau_best)
 
             for i in range(self.num_of_cells):
                 for j in range(self.num_of_ants):
@@ -136,20 +197,23 @@ class AntColony:
             num_of_fixed = 0
             self.best_ant = None
             for ant in self.ants:
-                print(ant.num_of_fixed, ant.num_of_incorrect, ant.get_f())
+                #print(ant.num_of_fixed, ant.num_of_incorrect, ant.get_f())
                 if ant.get_f() > num_of_fixed:
                     num_of_fixed = ant.get_f()
                     self.best_ant = ant
                     self.solved_grid = self.best_ant.grid
                 if num_of_fixed == self.num_of_cells:
-                    print('Solved!!!!!', num_of_fixed, self.best_ant.num_of_incorrect, self.best_ant.num_of_fixed)
-                    self.best_ant.grid.print_grid()
+
+                    # print('Solved!!!!!', num_of_fixed, self.best_ant.num_of_incorrect, self.best_ant.num_of_fixed)
+
+
+                    #self.best_ant.grid.print_grid()
                     return self.best_ant.grid
                     # exit()
-             # calculate delta_tau
-            delta_tau = self.num_of_cells/(self.num_of_cells - self.best_ant.get_f())
+            # calculate delta_tau
+            delta_tau = self.num_of_cells / (self.num_of_cells - self.best_ant.get_f())
             if delta_tau > self.delta_tau_best:
-               self.delta_tau_best = delta_tau
+                self.delta_tau_best = delta_tau
 
             # global pheromone update
             for i in range(self.grid_size):
@@ -163,36 +227,11 @@ class AntColony:
 
             self.delta_tau_best = self.delta_tau_best * self.delta_tau_best_evaporation
 
+
 num_of_ants = 20
 dim = 3
 local_evaporation_rate = 0.1
 global_evaporation_rate = 0.9
-quizzes, solutions = load_dataset()
 
-# test program on dataset
-with open("output.txt", "w") as file:
-    for i in range(10000):
-        file.write(f"Test {i}\n")
-        input_line = "".join([str(x) for x in quizzes[i]])
-        file.write(input_line + "\n")
-        initial_grid = create_matrix(input_line)
-        ant_colony = AntColony(num_of_ants, local_evaporation_rate, global_evaporation_rate, initial_grid, dim)
-        found = ant_colony.solve_sudoku()
-        if found is not None:
-            solution = create_array(found)
-            solved = True
-            for j in range(81):
-                if solution[j] != solutions[i][j]:
-                    file.write(f"Test {i} failed\n")
-                    solved = False
-                    break
-            if solved:
-                file.write(f"Test {i} passed\n")
-        else:
-            file.write(f"No solution found on test{i}\n")
-
-
-# ant_colony = AntColony(num_of_ants, local_evaporation_rate, global_evaporation_rate, initial_grid, dim)
-# ant_colony.current_grid.print_grid()
-# print(ant_colony.current_grid.sudoku[0][0].set_values)
-# ant_colony.solve_sudoku()
+solve_one_puzzle('one_sudoku.csv')
+#solve_all_puzzles(10000, 'sudoku_big.csv')

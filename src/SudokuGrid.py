@@ -109,7 +109,7 @@ class Grid:
         self.propagate_constraints_square(pos_i, pos_j, ant)
 
     def print_grid(self):
-        print(f"Size: ", len(self.sudoku[0]))
+        #print(f"Size: ", len(self.sudoku[0]))
         for i in range(len(self.sudoku[0])):
             for j in range(len(self.sudoku[1])):
                 print(self.sudoku[i][j].value, end=' ')
