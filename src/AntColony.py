@@ -55,6 +55,7 @@ def load_dataset(filename):
 def load_one_task(filename):
     file = open(filename, 'r')
     task_line = file.readline()
+    print(list(task_line))
     return task_line
 
 
@@ -83,6 +84,8 @@ def create_line(matrix: Grid):
 
 
 def solve_one_puzzle(filename):
+    output_file_name = "output.txt"
+    output_file = open(output_file_name, "a")
     input_puzzle_line = load_one_task(filename)
     initial_grid = create_matrix(input_puzzle_line)
     # print task
@@ -92,16 +95,18 @@ def solve_one_puzzle(filename):
             print(val, end=' ')
         print()
 
-    ant_colony = AntColony(num_of_ants, local_evaporation_rate, global_evaporation_rate, initial_grid, dim)
+    ant_colony = AntColony(num_of_ants, local_evaporation_rate, global_evaporation_rate, initial_grid, dim, output_file_name)
     found = ant_colony.solve_sudoku()
     if found is not None:
         # solution = create_array(found)
         print('Solved')
         found.print_grid()
+        output_file.write(create_line(found))
+
     else:
         print('No solution found')
 
-def solve_all_puzzles(num_of_puzzles, filename):
+def solve_all_puzzles(num_of_puzzles, filename, output_filename):
     quizzes, solutions = load_dataset(filename)
     # for i in range(10000):
     #     input_line = "".join([str(x) for x in quizzes[i]])
@@ -113,7 +118,7 @@ def solve_all_puzzles(num_of_puzzles, filename):
             solution_line = "".join([str(x) for x in solutions[i]])
             file.write(f"Input task: {input_line}, solution: {solution_line}\n")
             initial_grid = create_matrix(input_line)
-            ant_colony = AntColony(num_of_ants, local_evaporation_rate, global_evaporation_rate, initial_grid, dim)
+            ant_colony = AntColony(num_of_ants, local_evaporation_rate, global_evaporation_rate, initial_grid, dim, output_filename)
             found = ant_colony.solve_sudoku()
             if found is not None:
                 solution = create_array(found)
@@ -133,7 +138,7 @@ def solve_all_puzzles(num_of_puzzles, filename):
 
 class AntColony:
     def __init__(self, num_of_ants, local_evaporation_rate, global_evaporation_rate,
-                 initial_grid, dimension):
+                 initial_grid, dimension, output_file):
         self.num_of_ants = num_of_ants
         self.local_evaporation_rate = local_evaporation_rate
         self.global_evaporation_rate = global_evaporation_rate
@@ -152,6 +157,8 @@ class AntColony:
         self.delta_tau_best = 0
         self.best_ant = None
         fixed_num = 0
+        self.output_file_name = output_file
+        self.found_grids_file = open(output_file, "a")
         # filling current sudoku grid
         for i in range(self.grid_size):
             for j in range(self.grid_size):
@@ -177,7 +184,7 @@ class AntColony:
                              row=random.randint(0, self.grid_size - 1),
                              column=random.randint(0, self.grid_size - 1),
                              default_pheromone=self.default_pheromone,
-                             local_evaporation_rate=self.local_evaporation_rate
+                             local_evaporation_rate=self.local_evaporation_rate,
                              ) for i in range(self.num_of_ants)]
 
             #self.solved_grid.print_grid()
@@ -201,11 +208,11 @@ class AntColony:
                     num_of_fixed = ant.get_f()
                     self.best_ant = ant
                     self.solved_grid = self.best_ant.grid
+                    self.found_grids_file.write(create_line(self.solved_grid))
+                    self.found_grids_file.write("\n")
                 if num_of_fixed == self.num_of_cells:
 
                     # print('Solved!!!!!', num_of_fixed, self.best_ant.num_of_incorrect, self.best_ant.num_of_fixed)
-
-
                     #self.best_ant.grid.print_grid()
                     return self.best_ant.grid
                     # exit()
@@ -232,5 +239,5 @@ dim = 3
 local_evaporation_rate = 0.1
 global_evaporation_rate = 0.9
 
-solve_one_puzzle('one_sudoku.csv')
+#solve_one_puzzle('one_sudoku.csv')
 #solve_all_puzzles(10000, 'sudoku_big.csv')
