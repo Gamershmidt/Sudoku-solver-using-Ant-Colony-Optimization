@@ -101,7 +101,6 @@ def solve_one_puzzle(filename):
     else:
         print('No solution found')
 
-
 def solve_all_puzzles(num_of_puzzles, filename):
     quizzes, solutions = load_dataset(filename)
     # for i in range(10000):
