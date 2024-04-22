@@ -84,8 +84,6 @@ def create_line(matrix: Grid):
 
 
 def solve_one_puzzle(filename):
-    output_file_name = "output.txt"
-    output_file = open(output_file_name, "a")
     input_puzzle_line = load_one_task(filename)
     initial_grid = create_matrix(input_puzzle_line)
     # print task
@@ -94,14 +92,13 @@ def solve_one_puzzle(filename):
         for val in row:
             print(val, end=' ')
         print()
-
-    ant_colony = AntColony(num_of_ants, local_evaporation_rate, global_evaporation_rate, initial_grid, dim, output_file_name)
+    ant_colony = AntColony(num_of_ants, local_evaporation_rate, global_evaporation_rate, initial_grid, dim)
     found = ant_colony.solve_sudoku()
     if found is not None:
         # solution = create_array(found)
         print('Solved')
         found.print_grid()
-        output_file.write(create_line(found))
+        #output_file.write(create_line(found))
 
     else:
         print('No solution found')
@@ -138,7 +135,7 @@ def solve_all_puzzles(num_of_puzzles, filename, output_filename):
 
 class AntColony:
     def __init__(self, num_of_ants, local_evaporation_rate, global_evaporation_rate,
-                 initial_grid, dimension, output_file):
+                 initial_grid, dimension):
         self.num_of_ants = num_of_ants
         self.local_evaporation_rate = local_evaporation_rate
         self.global_evaporation_rate = global_evaporation_rate
@@ -157,8 +154,9 @@ class AntColony:
         self.delta_tau_best = 0
         self.best_ant = None
         fixed_num = 0
-        self.output_file_name = output_file
-        self.found_grids_file = open(output_file, "a")
+        output_file_name = "output.txt"
+        #self.output_file_name = open(output_file_name, "w")
+        self.found_grids_file = open(output_file_name, "w")
         # filling current sudoku grid
         for i in range(self.grid_size):
             for j in range(self.grid_size):
@@ -208,14 +206,17 @@ class AntColony:
                     num_of_fixed = ant.get_f()
                     self.best_ant = ant
                     self.solved_grid = self.best_ant.grid
-                    self.found_grids_file.write(create_line(self.solved_grid))
-                    self.found_grids_file.write("\n")
                 if num_of_fixed == self.num_of_cells:
 
                     # print('Solved!!!!!', num_of_fixed, self.best_ant.num_of_incorrect, self.best_ant.num_of_fixed)
                     #self.best_ant.grid.print_grid()
+                    self.found_grids_file.write(create_line(self.solved_grid))
+                    self.found_grids_file.write("\n")
+                    print(num_of_iterations)
                     return self.best_ant.grid
                     # exit()
+            self.found_grids_file.write(create_line(self.solved_grid))
+            self.found_grids_file.write("\n")
             # calculate delta_tau
             delta_tau = self.num_of_cells / (self.num_of_cells - self.best_ant.get_f())
             if delta_tau > self.delta_tau_best:

@@ -38,7 +38,7 @@ def draw_grid(screen):
             pygame.draw.line(screen, BLACK, (0, CELL_SIZE * i), (GRID_WIDTH, CELL_SIZE * i), 1)
 
 
-def draw_numbers(grid, screen, user_input=False):
+def draw_numbers(grid, screen, user_input=True, input_grid=None):
     font = pygame.font.Font(None, 30)
     table_for_color = create_check_table(grid)
     for i in range(GRID_SIZE):
@@ -46,12 +46,15 @@ def draw_numbers(grid, screen, user_input=False):
             if int(grid[i][j]) != 0:
                 text_color = BLACK
                 if not user_input:
-                    if table_for_color[i][j] == 3:
-                        text_color = (34, 139, 34)
-                    elif table_for_color[i][j] == 2:
-                        text_color = (50, 205, 50)
-                    elif table_for_color[i][j] == 1:
-                        text_color = (0, 255, 0)
+                    if int(input_grid[i][j]) == 0:
+                        if table_for_color[i][j] == 3:
+                            text_color = (34, 139, 34)
+                        elif table_for_color[i][j] == 2:
+                            text_color = (230, 236, 51)
+                        elif table_for_color[i][j] == 1:
+                            text_color = (230, 236, 51)
+                        elif table_for_color[i][j] == 0:
+                            text_color = (255, 0, 0)
                 text = font.render(grid[i][j], True, text_color)
                 text_pos = text.get_rect(center=(j * CELL_SIZE + CELL_SIZE // 2, i * CELL_SIZE + CELL_SIZE // 2))
                 screen.blit(text, text_pos)
@@ -103,13 +106,13 @@ def main():
     clock = pygame.time.Clock()
 
     screen.fill(WHITE)
-    grid = initialize_grid()
+    initial_grid = initialize_grid()
     stop_button_rect = create_stop_button(screen)
 
     while True:
         draw_grid(screen)
-        draw_numbers(grid, screen, user_input=True)
-        if handle_events(grid, stop_button_rect):
+        draw_numbers(initial_grid, screen)
+        if handle_events(initial_grid, stop_button_rect):
             break
         pygame.display.flip()
         clock.tick(30)
@@ -117,7 +120,7 @@ def main():
 
     #pygame.quit()
     input_sudoku = ""
-    for row in grid:
+    for row in initial_grid:
         for elem in row:
             input_sudoku += elem
     input_file = open("input.txt", "w")
@@ -131,9 +134,11 @@ def main():
     grids = []
     with open("output.txt", 'r') as output_file:
         for line in output_file:
-            grids.append([])
+            temp = []
             for i in range(9):
-                grids[-1].append(list(line)[:81][i: i + 9])
+                temp.append(line[i*9:(i+1)*9])
+            grids.append(temp)
+                #grids[-1].append(list(line)[:81][i: i + 9])
 
     #print("Sudoku grid:", input_sudoku)
     # grids = [
@@ -188,7 +193,7 @@ def main():
         screen.fill(WHITE)
         current_grid = grids[grid_index]
         draw_grid(screen)
-        draw_numbers(current_grid, screen)
+        draw_numbers(current_grid, screen, user_input=False, input_grid=initial_grid)
         # Event handling
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -201,7 +206,7 @@ def main():
         grid_index = (grid_index + 1)
 
         # Pause for 1 second
-        time.sleep(1)
+        time.sleep(0.5)
         if grid_index == len(grids):
             break
     pygame.quit()
