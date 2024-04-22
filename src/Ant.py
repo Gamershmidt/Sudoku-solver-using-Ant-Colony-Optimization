@@ -4,7 +4,32 @@ import numpy as np
 from SudokuGrid import Grid
 
 class Ant:
+    """
+    Class representing an ant for solving Sudoku using Ant Colony Optimization (ACO).
+
+    Attributes:
+        grid (Grid): The Sudoku grid to solve.
+        pheromone_matrix (numpy.ndarray): Matrix representing pheromone levels on each cell.
+        row (int): Current row index of the ant.
+        column (int): Current column index of the ant.
+        default_pheromone (float): Default pheromone level on each cell.
+        local_evaporation_rate (float): Rate of local pheromone evaporation.
+        num_of_visited (int): Number of cells visited by the ant.
+        num_of_fixed (int): Number of cells fixed by the ant.
+        num_of_incorrect (int): Number of incorrect cell selections by the ant.
+    """
     def __init__(self, grid= None, pheromone_matrix = None, row = 0, column = 0, default_pheromone = 1/81, local_evaporation_rate = 0.01):
+        """
+        Initialize an Ant instance.
+
+        Args:
+            grid (Grid, optional): The Sudoku grid to solve. Defaults to None.
+            pheromone_matrix (numpy.ndarray, optional): Matrix representing pheromone levels on each cell. Defaults to None.
+            row (int, optional): Current row index of the ant. Defaults to 0.
+            column (int, optional): Current column index of the ant. Defaults to 0.
+            default_pheromone (float, optional): Default pheromone level on each cell. Defaults to 1/81.
+            local_evaporation_rate (float, optional): Rate of local pheromone evaporation. Defaults to 0.01.
+        """
         if not grid:
             self.board_size = 81
         else:
@@ -20,6 +45,9 @@ class Ant:
         self.num_of_visited = 0
 
     def perform_move(self):
+        """
+        Perform one move of the ant.
+        """
         self.move_one_cell()
         self.num_of_visited += 1
         cur_cell_possible_values = self.grid.get_possible_values(self.row, self.column)
@@ -49,6 +77,9 @@ class Ant:
                 chosen_value - 1] + self.local_evaporation_rate * self.default_pheromone)
 
     def move_one_cell(self):
+        """
+        Move the ant to the next cell.
+        """
         if self.column+1 < self.board_size:
             self.column += 1
         elif self.row + 1 < self.board_size:
@@ -59,4 +90,10 @@ class Ant:
             self.column = 0
 
     def get_f(self):
+        """
+        Get the fitness value of the ant.
+
+        Returns:
+            int: Fitness value.
+        """
         return self.num_of_fixed - self.num_of_incorrect
