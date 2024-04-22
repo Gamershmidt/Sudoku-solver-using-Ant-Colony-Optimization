@@ -193,7 +193,7 @@ def solve_all_puzzles(num_of_puzzles, filename, output_filename):
 
 
 class AntColony:
-    """
+    '''
     Class representing an Ant Colony Optimization (ACO) algorithm for solving Sudoku puzzles.
 
     Attributes:
@@ -210,10 +210,10 @@ class AntColony:
         delta_tau_best (float): Delta tau value for the best solution found.
         best_ant (Ant): The ant with the best solution.
         found_grids_file (file): File to store found grids during solving.
-    """
+    '''
     def __init__(self, num_of_ants, local_evaporation_rate, global_evaporation_rate,
                  initial_grid, dimension):
-                     """
+        '''
         Initialize an AntColony instance.
 
         Args:
@@ -222,7 +222,7 @@ class AntColony:
             global_evaporation_rate (float): The rate of global pheromone evaporation.
             initial_grid (Grid): The initial Sudoku grid.
             dimension (int): The dimension of the Sudoku grid (e.g., 3 for a 9x9 grid).
-        """
+        '''
         self.num_of_ants = num_of_ants
         self.local_evaporation_rate = local_evaporation_rate
         self.global_evaporation_rate = global_evaporation_rate
@@ -269,7 +269,7 @@ class AntColony:
         """
         sudoku_solved = False
         num_of_iterations = 0
-        while not sudoku_solved and num_of_iterations < 1000:
+        while not sudoku_solved and num_of_iterations < 10000:
             self.ants = [Ant(grid=copy.deepcopy(self.current_grid),
                              pheromone_matrix=self.pheromone_matrix,
                              row=random.randint(0, self.grid_size - 1),
@@ -310,6 +310,7 @@ class AntColony:
                     # exit()
             self.found_grids_file.write(create_line(self.solved_grid))
             self.found_grids_file.write("\n")
+            print(num_of_iterations, num_of_fixed)
             # calculate delta_tau
             delta_tau = self.num_of_cells / (self.num_of_cells - self.best_ant.get_f())
             if delta_tau > self.delta_tau_best:
@@ -320,10 +321,10 @@ class AntColony:
                 for j in range(self.grid_size):
                     #cur_cell = self.best_ant.grid.sudoku[i][j]
                     cur_cell = self.solved_grid.sudoku[i][j]
-                    if not cur_cell.is_cell_incorrect:
+                    if not cur_cell.is_cell_incorrect():
                         self.pheromone_matrix[i][j][cur_cell.value - 1] = (
                                 (1 - self.global_evaporation_rate) * self.pheromone_matrix[i][j][cur_cell.value - 1] +
-                                self.global_evaporation_rate * self.default_pheromone)
+                                self.global_evaporation_rate * self.delta_tau_best)
 
             self.delta_tau_best = self.delta_tau_best * self.delta_tau_best_evaporation
 
@@ -333,5 +334,5 @@ dim = 3
 local_evaporation_rate = 0.1
 global_evaporation_rate = 0.9
 
-#solve_one_puzzle('one_sudoku.csv')
+solve_one_puzzle('one_sudoku.csv')
 #solve_all_puzzles(10000, 'sudoku_big.csv')
