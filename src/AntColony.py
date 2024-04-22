@@ -55,6 +55,7 @@ def load_dataset(filename):
 def load_one_task(filename):
     file = open(filename, 'r')
     task_line = file.readline()
+    print(list(task_line))
     return task_line
 
 
@@ -91,17 +92,18 @@ def solve_one_puzzle(filename):
         for val in row:
             print(val, end=' ')
         print()
-
     ant_colony = AntColony(num_of_ants, local_evaporation_rate, global_evaporation_rate, initial_grid, dim)
     found = ant_colony.solve_sudoku()
     if found is not None:
         # solution = create_array(found)
         print('Solved')
         found.print_grid()
+        #output_file.write(create_line(found))
+
     else:
         print('No solution found')
 
-def solve_all_puzzles(num_of_puzzles, filename):
+def solve_all_puzzles(num_of_puzzles, filename, output_filename):
     quizzes, solutions = load_dataset(filename)
     # for i in range(10000):
     #     input_line = "".join([str(x) for x in quizzes[i]])
@@ -113,7 +115,7 @@ def solve_all_puzzles(num_of_puzzles, filename):
             solution_line = "".join([str(x) for x in solutions[i]])
             file.write(f"Input task: {input_line}, solution: {solution_line}\n")
             initial_grid = create_matrix(input_line)
-            ant_colony = AntColony(num_of_ants, local_evaporation_rate, global_evaporation_rate, initial_grid, dim)
+            ant_colony = AntColony(num_of_ants, local_evaporation_rate, global_evaporation_rate, initial_grid, dim, output_filename)
             found = ant_colony.solve_sudoku()
             if found is not None:
                 solution = create_array(found)
@@ -152,6 +154,9 @@ class AntColony:
         self.delta_tau_best = 0
         self.best_ant = None
         fixed_num = 0
+        output_file_name = "output.txt"
+        #self.output_file_name = open(output_file_name, "w")
+        self.found_grids_file = open(output_file_name, "w")
         # filling current sudoku grid
         for i in range(self.grid_size):
             for j in range(self.grid_size):
@@ -177,7 +182,7 @@ class AntColony:
                              row=random.randint(0, self.grid_size - 1),
                              column=random.randint(0, self.grid_size - 1),
                              default_pheromone=self.default_pheromone,
-                             local_evaporation_rate=self.local_evaporation_rate
+                             local_evaporation_rate=self.local_evaporation_rate,
                              ) for i in range(self.num_of_ants)]
 
             #self.solved_grid.print_grid()
@@ -204,11 +209,14 @@ class AntColony:
                 if num_of_fixed == self.num_of_cells:
 
                     # print('Solved!!!!!', num_of_fixed, self.best_ant.num_of_incorrect, self.best_ant.num_of_fixed)
-
-
                     #self.best_ant.grid.print_grid()
+                    self.found_grids_file.write(create_line(self.solved_grid))
+                    self.found_grids_file.write("\n")
+                    print(num_of_iterations)
                     return self.best_ant.grid
                     # exit()
+            self.found_grids_file.write(create_line(self.solved_grid))
+            self.found_grids_file.write("\n")
             # calculate delta_tau
             delta_tau = self.num_of_cells / (self.num_of_cells - self.best_ant.get_f())
             if delta_tau > self.delta_tau_best:
@@ -232,5 +240,5 @@ dim = 3
 local_evaporation_rate = 0.1
 global_evaporation_rate = 0.9
 
-solve_one_puzzle('one_sudoku.csv')
+#solve_one_puzzle('one_sudoku.csv')
 #solve_all_puzzles(10000, 'sudoku_big.csv')
