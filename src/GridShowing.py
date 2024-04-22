@@ -14,14 +14,15 @@ GRID_SIZE = 9
 GRID_WIDTH = CELL_SIZE * GRID_SIZE
 GRID_HEIGHT = CELL_SIZE * GRID_SIZE
 FONT_SIZE = 30
-BUTTON_COLOR = (255, 0, 0)
+BUTTON_COLOR = (34, 200, 34)
 BUTTON_TEXT_COLOR = (0, 0, 0)
 
 # Initialize pygame
 pygame.init()
 
 # Set up the window
-WIDTH, HEIGHT = 370, 590
+WIDTH, HEIGHT = 370, 460
+PADDING = 4
 WINDOW_SIZE = (WIDTH, HEIGHT)
 #screen = pygame.display.set_mode(WINDOW_SIZE)
 #pygame.display.set_caption("Sudoku Visualizer")
@@ -31,11 +32,11 @@ WINDOW_SIZE = (WIDTH, HEIGHT)
 def draw_grid(screen):
     for i in range(GRID_SIZE+1):
         if i % 3 == 0:
-            pygame.draw.line(screen, BLACK, (CELL_SIZE * i, 0), (CELL_SIZE * i, GRID_HEIGHT), 2)
-            pygame.draw.line(screen, BLACK, (0, CELL_SIZE * i), (GRID_WIDTH, CELL_SIZE * i), 2)
+            pygame.draw.line(screen, BLACK, (CELL_SIZE * i+PADDING, 0), (CELL_SIZE * i+PADDING, GRID_HEIGHT), 2)
+            pygame.draw.line(screen, BLACK, (0+PADDING, CELL_SIZE * i), (GRID_WIDTH+PADDING, CELL_SIZE * i), 2)
         else:
-            pygame.draw.line(screen, BLACK, (CELL_SIZE * i, 0), (CELL_SIZE * i, GRID_HEIGHT), 1)
-            pygame.draw.line(screen, BLACK, (0, CELL_SIZE * i), (GRID_WIDTH, CELL_SIZE * i), 1)
+            pygame.draw.line(screen, BLACK, (CELL_SIZE * i+PADDING, 0), (CELL_SIZE * i+PADDING, GRID_HEIGHT), 1)
+            pygame.draw.line(screen, BLACK, (0+PADDING, CELL_SIZE * i), (GRID_WIDTH+PADDING, CELL_SIZE * i), 1)
 
 
 def draw_numbers(grid, screen, user_input=True, input_grid=None):
@@ -56,7 +57,7 @@ def draw_numbers(grid, screen, user_input=True, input_grid=None):
                         elif table_for_color[i][j] == 0:
                             text_color = (255, 0, 0)
                 text = font.render(grid[i][j], True, text_color)
-                text_pos = text.get_rect(center=(j * CELL_SIZE + CELL_SIZE // 2, i * CELL_SIZE + CELL_SIZE // 2))
+                text_pos = text.get_rect(center=(j * CELL_SIZE + CELL_SIZE // 2 + PADDING, i * CELL_SIZE + CELL_SIZE // 2))
                 screen.blit(text, text_pos)
 
 
@@ -79,7 +80,23 @@ def handle_events(grid, stop_button_rect):
                 row, col = pygame.mouse.get_pos()
                 row = row // CELL_SIZE
                 col = col // CELL_SIZE
-                grid[col][row] = str(event.unicode)
+                check = True
+                for i in range(GRID_SIZE):
+                    if grid[i][row] == str(event.unicode):
+                        check = False
+                for i in range(GRID_SIZE):
+                    if grid[col][i] == str(event.unicode):
+                        check = False
+
+                start_x = (col // 3) * 3
+                start_y = (row // 3) * 3
+
+                for i in range(start_x, start_x + 3):
+                    for j in range(start_y, start_y + 3):
+                        if grid[i][j] == str(event.unicode):
+                            check = False
+                if check or str(event.unicode) == '0':
+                    grid[col][row] = str(event.unicode)
     return False
 
 
@@ -156,15 +173,16 @@ def main():
         grid_index = (grid_index + 1)
 
         # Pause for 1 second
-        time.sleep(0.3)
+        time.sleep(0.2)
         if grid_index == len(grids):
             break
-    stop_button_rect = create_stop_button(screen, "Exit")
 
     quit_point = False
     while True:
+        screen.fill(WHITE)
         draw_grid(screen)
-        draw_numbers(initial_grid, screen)
+        stop_button_rect = create_stop_button(screen, "Exit")
+        draw_numbers(grids[-1], screen, user_input=False, input_grid=initial_grid)
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
@@ -190,4 +208,15 @@ if __name__ == "__main__":
 # 009000050
 # 007290086
 # 103607204
+
+
+# 001520040
+# 600100009
+# 040800070
+# 090000001
+# 008000400
+# 400000090
+# 070009080
+# 500008004
+# 010052600
 
