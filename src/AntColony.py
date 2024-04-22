@@ -41,6 +41,15 @@ from Ant import Ant
 # ]
 
 def load_dataset(filename):
+    """
+    Load Sudoku puzzles dataset from a CSV file.
+
+    Args:
+        filename (str): The filename of the CSV file containing Sudoku puzzles and solutions.
+
+    Returns:
+        numpy.ndarray, numpy.ndarray: Arrays containing Sudoku puzzles and their corresponding solutions.
+    """
     import numpy as np
     quizzes = np.zeros((1000000, 81), np.int32)
     solutions = np.zeros((1000000, 81), np.int32)
@@ -53,6 +62,15 @@ def load_dataset(filename):
     return quizzes, solutions
 
 def load_one_task(filename):
+    """
+    Load a single Sudoku puzzle from a file.
+
+    Args:
+        filename (str): The filename of the file containing the Sudoku puzzle.
+
+    Returns:
+        str: A single Sudoku puzzle encoded as a string.
+    """
     file = open(filename, 'r')
     task_line = file.readline()
     print(list(task_line))
@@ -60,6 +78,15 @@ def load_one_task(filename):
 
 
 def create_matrix(input_string):
+    """
+    Create a Sudoku grid matrix from an input string.
+
+    Args:
+        input_string (str): The input string representing the Sudoku puzzle.
+
+    Returns:
+        list: A 2D list representing the Sudoku grid.
+    """
     rows = []
     for i in range(9):
         row = [int(input_string[j]) for j in range(i * 9, (i + 1) * 9)]
@@ -68,6 +95,15 @@ def create_matrix(input_string):
 
 
 def create_array(matrix: Grid):
+    """
+    Convert a Sudoku grid matrix to a 1D array.
+
+    Args:
+        matrix (Grid): The Sudoku grid.
+
+    Returns:
+        list: A 1D list representing the Sudoku grid.
+    """
     array = []
     for row in matrix.sudoku:
         for val in row:
@@ -76,6 +112,15 @@ def create_array(matrix: Grid):
 
 
 def create_line(matrix: Grid):
+    """
+    Convert a Sudoku grid matrix to a string.
+
+    Args:
+        matrix (Grid): The Sudoku grid.
+
+    Returns:
+        str: A string representation of the Sudoku grid.
+    """
     line = ""
     for row in matrix.sudoku:
         for val in row:
@@ -84,6 +129,12 @@ def create_line(matrix: Grid):
 
 
 def solve_one_puzzle(filename):
+    """
+    Solve a single Sudoku puzzle and print the solution.
+
+    Args:
+        filename (str): The filename of the file containing the Sudoku puzzle.
+    """
     input_puzzle_line = load_one_task(filename)
     initial_grid = create_matrix(input_puzzle_line)
     # print task
@@ -104,6 +155,14 @@ def solve_one_puzzle(filename):
         print('No solution found')
 
 def solve_all_puzzles(num_of_puzzles, filename, output_filename):
+    """
+    Solve multiple Sudoku puzzles and write the results to an output file.
+
+    Args:
+        num_of_puzzles (int): The number of Sudoku puzzles to solve.
+        filename (str): The filename of the file containing Sudoku puzzles and solutions.
+        output_filename (str): The filename of the output file to write the results to.
+    """
     quizzes, solutions = load_dataset(filename)
     # for i in range(10000):
     #     input_line = "".join([str(x) for x in quizzes[i]])
@@ -134,8 +193,36 @@ def solve_all_puzzles(num_of_puzzles, filename, output_filename):
 
 
 class AntColony:
+    """
+    Class representing an Ant Colony Optimization (ACO) algorithm for solving Sudoku puzzles.
+
+    Attributes:
+        num_of_ants (int): The number of ants in the colony.
+        local_evaporation_rate (float): The rate of local pheromone evaporation.
+        global_evaporation_rate (float): The rate of global pheromone evaporation.
+        initial_grid (Grid): The initial Sudoku grid.
+        current_grid (Grid): The current Sudoku grid being processed.
+        grid_size (int): The size of the Sudoku grid.
+        num_of_cells (int): The number of cells in the Sudoku grid.
+        default_pheromone (float): The default pheromone level on each cell.
+        pheromone_matrix (list): Matrix representing pheromone levels on each cell.
+        ants (list): List of ants in the colony.
+        delta_tau_best (float): Delta tau value for the best solution found.
+        best_ant (Ant): The ant with the best solution.
+        found_grids_file (file): File to store found grids during solving.
+    """
     def __init__(self, num_of_ants, local_evaporation_rate, global_evaporation_rate,
                  initial_grid, dimension):
+                     """
+        Initialize an AntColony instance.
+
+        Args:
+            num_of_ants (int): The number of ants in the colony.
+            local_evaporation_rate (float): The rate of local pheromone evaporation.
+            global_evaporation_rate (float): The rate of global pheromone evaporation.
+            initial_grid (Grid): The initial Sudoku grid.
+            dimension (int): The dimension of the Sudoku grid (e.g., 3 for a 9x9 grid).
+        """
         self.num_of_ants = num_of_ants
         self.local_evaporation_rate = local_evaporation_rate
         self.global_evaporation_rate = global_evaporation_rate
@@ -174,6 +261,12 @@ class AntColony:
         #print("num of fixed ")
 
     def solve_sudoku(self):
+        """
+        Solve the Sudoku puzzle using Ant Colony Optimization.
+
+        Returns:
+            Grid: The solved Sudoku grid.
+        """
         sudoku_solved = False
         num_of_iterations = 0
         while not sudoku_solved and num_of_iterations < 1000:
