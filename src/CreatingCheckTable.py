@@ -1,7 +1,18 @@
+# Importing module for checking conditions
 import CheckingConditions as Check
 
 
 def create_check_table(grid):
+    """
+    Create a check table based on the given Sudoku grid.
+
+    Args:
+    grid (list): 2D matrix of Sudoku puzzle with numbers.
+
+    Returns:
+    list: 2D list representing the check table, where each cell represents
+    how many conditions are met by the number at this position.
+    """
     check_table = [[0] * 9 for _ in range(9)]
 
     # Horizontal checkingGrid
