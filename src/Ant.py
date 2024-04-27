@@ -3,9 +3,10 @@ import random
 import numpy as np
 from SudokuGrid import Grid
 
+
 class Ant:
     """
-    Class representing an ant for solving Sudoku using Ant Colony Optimization (ACO).
+    Class representing an ant.
 
     Attributes:
         grid (Grid): The Sudoku grid to solve.
@@ -17,6 +18,7 @@ class Ant:
         num_of_visited (int): Number of cells visited by the ant.
         num_of_fixed (int): Number of cells fixed by the ant.
         num_of_incorrect (int): Number of incorrect cell selections by the ant.
+
     """
     def __init__(self, grid= None, pheromone_matrix = None, row = 0, column = 0, default_pheromone = 1/81, local_evaporation_rate = 0.01):
         """
@@ -24,7 +26,7 @@ class Ant:
 
         Args:
             grid (Grid, optional): The Sudoku grid to solve. Defaults to None.
-            pheromone_matrix (numpy.ndarray, optional): Matrix representing pheromone levels on each cell. Defaults to None.
+            pheromone_matrix (list): Matrix representing pheromone levels on each cell for each possible value.
             row (int, optional): Current row index of the ant. Defaults to 0.
             column (int, optional): Current column index of the ant. Defaults to 0.
             default_pheromone (float, optional): Default pheromone level on each cell. Defaults to 1/81.
@@ -46,7 +48,7 @@ class Ant:
 
     def perform_move(self):
         """
-        Perform one move of the ant.
+        Move the ant to the next cell and fix a value in the cell.
         """
         self.move_one_cell()
         self.num_of_visited += 1
