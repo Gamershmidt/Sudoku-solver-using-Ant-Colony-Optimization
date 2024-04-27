@@ -1,8 +1,8 @@
 import copy
 import random
 
-from SudokuGrid import Grid
-from Ant import Ant
+from src.SudokuGrid import Grid
+from src.Ant import Ant
 
 
 def load_dataset(filename, num_of_lines = 1000):
@@ -212,7 +212,7 @@ class AntColony:
         self.best_ant = None
         fixed_num = 0
         # filename for the file to store intermediate grids for visualization
-        output_file_name = "output.txt"
+        output_file_name = "../data/output.txt"
 
         self.found_grids_file = open(output_file_name, "w")
         # filling current sudoku grid
@@ -301,5 +301,5 @@ local_evaporation_rate = 0.1
 global_evaporation_rate = 0.9
 delta_tau_best_evaporation = 0.995
 
-solve_one_puzzle('one_sudoku.csv')
+solve_one_puzzle('../data/one_sudoku.csv')
 #solve_all_puzzles(1000, 'sudoku_big.csv')

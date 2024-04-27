@@ -1,7 +1,7 @@
 import random
 
 import numpy as np
-from SudokuGrid import Grid
+from src.SudokuGrid import Grid
 
 
 class Ant:

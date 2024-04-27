@@ -2,7 +2,7 @@ import sys
 import time
 import pygame
 from CreatingCheckTable import create_check_table
-import AntColony
+import src.AntColony as AntColony
 
 # Colors
 WHITE = (255, 255, 255)
@@ -215,17 +215,17 @@ def main():
     for row in initial_grid:
         for elem in row:
             input_sudoku += elem
-    input_file = open("input.txt", "w")
+    input_file = open("../data/input.txt", "w")
     input_file.write(input_sudoku)
     input_file.close()
     time.sleep(1)
 
     # Perform Ant Colony Optimization to solve user's Sudoku puzzle
-    AntColony.solve_one_puzzle('input.txt')
+    AntColony.solve_one_puzzle('../data/input.txt')
 
     # Obtain solutions from output file
     grids = []
-    with open("output.txt", 'r') as output_file:
+    with open("../data/output.txt", 'r') as output_file:
         for line in output_file:
             temp = []
             for i in range(9):
