@@ -44,7 +44,6 @@ def load_one_task(filename):
     """
     file = open(filename, 'r')
     task_line = file.readline()
-    print(list(task_line))
     return task_line
 
 
@@ -276,7 +275,6 @@ class AntColony:
 
             self.found_grids_file.write(create_line(self.solved_grid))
             self.found_grids_file.write("\n")
-            print(num_of_iterations, num_of_fixed)
 
             # calculate delta_tau
             delta_tau = self.num_of_cells / (self.num_of_cells - self.best_ant.get_f())
@@ -301,5 +299,5 @@ local_evaporation_rate = 0.1
 global_evaporation_rate = 0.9
 delta_tau_best_evaporation = 0.995
 
-solve_one_puzzle('../data/one_sudoku.csv')
+# solve_one_puzzle('../data/one_sudoku.csv')
 #solve_all_puzzles(1000, 'sudoku_big.csv')
