@@ -83,13 +83,7 @@ To run the Sudoku Solver program locally, follow these steps:
 
 4. **Run the Program**
 
-    Navigate to the `interface` directory and execute the `GridShowing.py` file:
-
-    ```bash
-    cd interface
-    python GridShowing.py
-    ```
-Ensure that the `GridShowing.py` file has executable permissions.
+    Open the project in PyCharm and run the GridShowing.py file to execute the Sudoku Solver program. Make sure you set up Python interpreter and installed all necessery libraries.
 
 **Notes:**
 
